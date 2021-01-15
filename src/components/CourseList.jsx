@@ -15,6 +15,7 @@ const CourseList = () => {
       limit: pageSize,
       offset: (currentPage - 1) * pageSize,
     },
+    fetchPolicy: "no-cache",
   });
 
   if (loading) return <ListPlaceholder count={pageSize / 2} />;

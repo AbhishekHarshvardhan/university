@@ -8,6 +8,7 @@ const ListPlaceholder = ({ count = 1 }) => {
   return (
     <div className="ui section">
       <br />
+      <br />
       {list.map((value) => (
         <div key={value} className="ui fluid placeholder">
           <div className="image header">

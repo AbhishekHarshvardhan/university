@@ -52,7 +52,7 @@ const StudentForm = ({ student, children }) => {
 
   useEffect(() => {
     if (student) setNewStudent(student);
-  }, []);
+  }, [student]);
 
   if (adding || updating) return <ListPlaceholder count={3} />;
   return (

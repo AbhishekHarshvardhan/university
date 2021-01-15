@@ -1,8 +1,9 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
 import { FETCH_ALL_COURSES } from "../queries/query";
+import ListPlaceholder from "./common/ListPlaceholder";
 
-const CourseListModal = ({ onSave, handleClose, show }) => {
+const CourseListModal = ({ onSave, handleClose, show, studentCourses }) => {
   let input;
   const dimmerClassName = show ? "ui dimmer modals active" : "ui dimmer modals";
   const modalClassName = show ? "ui modal active" : "ui modal";
@@ -13,7 +14,7 @@ const CourseListModal = ({ onSave, handleClose, show }) => {
       <div className={modalClassName}>
         <div className="header">Select a course</div>
         <div className="content">
-          {loading && <div>Loading...</div>}
+          {loading && <ListPlaceholder count={2} />}
           {!loading && (
             <select
               ref={(node) => {
@@ -21,11 +22,13 @@ const CourseListModal = ({ onSave, handleClose, show }) => {
               }}
               className="ui dropdown"
             >
-              {data.courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.title}
-                </option>
-              ))}
+              {data.courses
+                .filter((c) => !studentCourses.includes(c.id))
+                .map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {course.title}
+                  </option>
+                ))}
             </select>
           )}
         </div>

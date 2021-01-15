@@ -57,7 +57,7 @@ const CourseForm = ({ course }) => {
 
   useEffect(() => {
     if (course) setNewCourse(course);
-  }, []);
+  }, [course]);
 
   if (adding || updating) return <ListPlaceholder count={4} />;
   return (

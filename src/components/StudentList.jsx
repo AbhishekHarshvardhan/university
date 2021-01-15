@@ -10,14 +10,12 @@ import ItemButton from "./ItemButton";
 const StudentList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
-  const {
-    data = { students: [], students_aggregate: { aggregate: { count: 0 } } },
-    loading,
-  } = useQuery(FETCH_STUDENTS, {
+  const { data, loading } = useQuery(FETCH_STUDENTS, {
     variables: {
       limit: pageSize,
       offset: (currentPage - 1) * pageSize,
     },
+    fetchPolicy: "no-cache",
   });
 
   if (loading) return <ListPlaceholder count={pageSize} />;

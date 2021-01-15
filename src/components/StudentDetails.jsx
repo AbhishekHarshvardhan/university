@@ -54,6 +54,7 @@ const StudentDetails = ({
         show={showModal}
         handleClose={() => setShowModal(false)}
         onSave={onSave}
+        studentCourses={data.students_by_pk.enrolments.map((c) => c.course.id)}
       />
     </StudentForm>
   );
