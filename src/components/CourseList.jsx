@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Pagination from "react-js-pagination";
 import { FETCH_COURSES } from "../queries/query";
@@ -6,20 +6,16 @@ import CourseTable from "./CourseTable";
 import ListPlaceholder from "./common/ListPlaceholder";
 import ItemButton from "./ItemButton";
 
+const pageSize = 10;
+
 const CourseList = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
-  const result = useQuery(FETCH_COURSES, {
+  const { data, loading } = useQuery(FETCH_COURSES, {
     variables: {
       limit: pageSize,
       offset: (currentPage - 1) * pageSize,
     },
   });
-
-  const {
-    data = { courses: [], courses_aggregate: { aggregate: { count: 0 } } },
-    loading,
-  } = result;
 
   if (loading) return <ListPlaceholder count={pageSize / 2} />;
   return (

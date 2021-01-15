@@ -1,12 +1,12 @@
 import "./App.css";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import StudentDetails from "./components/views/StudentDetails";
-import StudentView from "./components/views/StudentView";
-import CourseView from "./components/views/CourseView";
-import StudentNew from "./components/views/StudentNew";
-import CourseNew from "./components/views/CourseNew";
-import CourseDetail from "./components/views/CourseDetail";
+import StudentDetails from "./components/StudentDetails";
+import CourseDetail from "./components/CourseDetail";
+import CourseList from "./components/CourseList";
+import StudentList from "./components/StudentList";
+import StudentForm from "./components/StudentForm";
+import CourseForm from "./components/CourseForm";
 
 function App() {
   return (
@@ -14,12 +14,12 @@ function App() {
       <Navbar />
       <div className="ui container">
         <Switch>
-          <Route path="/students/new" component={StudentNew} />
+          <Route path="/students/new" component={StudentForm} />
           <Route path="/students/:id" component={StudentDetails} />
-          <Route path="/students" component={StudentView} />
-          <Route path="/courses/new" component={CourseNew} />
+          <Route path="/students" component={StudentList} />
+          <Route path="/courses/new" component={CourseForm} />
           <Route path="/courses/:id" component={CourseDetail} />
-          <Route path="/courses" component={CourseView} />
+          <Route path="/courses" component={CourseList} />
           <Route path="/">
             <Redirect to="/students" />
           </Route>

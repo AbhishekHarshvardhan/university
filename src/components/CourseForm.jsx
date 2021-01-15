@@ -1,17 +1,69 @@
+import { useMutation } from "@apollo/client";
 import React from "react";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { ADD_COURSE, UPDATE_COURSE } from "../queries/mutation";
+import ListPlaceholder from "./common/ListPlaceholder";
 
-const CourseForm = ({ newCourse, data, course, handleChange, onSubmit }) => {
-  const onFormSubmit = (e) => {
-    e.preventDefault();
-    onSubmit();
+const CourseForm = ({ course }) => {
+  const history = useHistory();
+  const [newCourse, setNewCourse] = React.useState({
+    title: "",
+    start_date: "",
+    end_date: "",
+    detail: "",
+  });
+
+  const [addCourse, { loading: adding }] = useMutation(ADD_COURSE, {
+    onCompleted: () => history.push("/courses"),
+    update: (cache, { data: { insert_courses_one } }) => {
+      cache.modify({
+        fields: {
+          courses(exitingCourses = []) {
+            return [insert_courses_one, ...exitingCourses];
+          },
+        },
+      });
+    },
+  });
+  const [updateCourse, { loading: updating }] = useMutation(UPDATE_COURSE);
+
+  const handleChange = ({ currentTarget: Input }) => {
+    setNewCourse({ ...newCourse, [Input.name]: Input.value });
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (course)
+      return updateCourse({
+        variables: {
+          id: newCourse.id,
+          title: newCourse.title,
+          detail: newCourse.detail,
+          end_date: newCourse.end_date,
+          start_date: newCourse.start_date,
+        },
+      });
+
+    addCourse({
+      variables: {
+        title: newCourse.title,
+        detail: newCourse.detail,
+        end_date: newCourse.end_date,
+        start_date: newCourse.start_date,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (course) setNewCourse(course);
+  }, []);
+
+  if (adding || updating) return <ListPlaceholder count={4} />;
   return (
-    <form className="ui form border" onSubmit={onFormSubmit}>
-      {!newCourse && (
-        <h4 className="ui dividing header">{data.courses_by_pk.title}</h4>
-      )}
-      {newCourse && (
+    <form className="ui form border" onSubmit={onSubmit}>
+      {course && <h4 className="ui dividing header">{course.title}</h4>}
+      {!course && (
         <h4 className="ui dividing header">Please fill below details</h4>
       )}
       <br />
@@ -20,7 +72,7 @@ const CourseForm = ({ newCourse, data, course, handleChange, onSubmit }) => {
         <input
           type="text"
           name="title"
-          value={course.title}
+          value={newCourse.title}
           onChange={handleChange}
           required
         />
@@ -31,9 +83,9 @@ const CourseForm = ({ newCourse, data, course, handleChange, onSubmit }) => {
           <div className="field">
             <input
               type="date"
-              name="startDate"
+              name="start_date"
               placeholder="Start"
-              value={course.startDate}
+              value={newCourse.start_date}
               onChange={handleChange}
               required
             />
@@ -41,9 +93,9 @@ const CourseForm = ({ newCourse, data, course, handleChange, onSubmit }) => {
           <div className="field">
             <input
               type="date"
-              name="endDate"
+              name="end_date"
               placeholder="End"
-              value={course.endDate}
+              value={newCourse.end_date}
               onChange={handleChange}
               required
             />
@@ -52,7 +104,7 @@ const CourseForm = ({ newCourse, data, course, handleChange, onSubmit }) => {
       </div>
       <div className="field">
         <textarea
-          value={course.detail}
+          value={newCourse.detail}
           name="detail"
           cols="30"
           rows="5"

@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const FETCH_STUDENTS = gql`
   query FetchStudents($limit: Int, $offset: Int) {
-    students(limit: $limit, offset: $offset) {
+    students(limit: $limit, offset: $offset, order_by: { id: desc }) {
       id
       firstname
       lastname
@@ -50,16 +50,16 @@ export const FETCH_STUDENT = gql`
 
 export const FETCH_COURSES = gql`
   query FetchCourses($limit: Int, $offset: Int) {
-    courses(limit: $limit, offset: $offset) {
+    courses(limit: $limit, offset: $offset, order_by: { id: desc }) {
+      id
       detail
       end_date
       start_date
-      id
       title
     }
     courses_aggregate {
       aggregate {
-        count
+        count(columns: id)
       }
     }
   }
@@ -80,10 +80,10 @@ export const FETCH_COURSE = gql`
 export const FETCH_ALL_COURSES = gql`
   query FetchAllCourses {
     courses {
+      id
       detail
       end_date
       start_date
-      id
       title
     }
   }
